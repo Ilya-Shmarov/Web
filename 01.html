@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторная работа 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #ff8000;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .site-title {
+            text-align: center;
+        }
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            padding: 5px;
+            margin-bottom: 5px;
+            width: 100%;
+        }
+        .login-form input[type="submit"] {
+            padding: 3px 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .login-form a {
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .nav {
+            background-color: #fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #ff8000;
+        }
+        .nav a {
+            color: #333;
+            text-decoration: none;
+            padding: 5px 10px;
+        }
+        .nav a:hover {
+            background-color: #ff8000;
+            color: white;
+        }
+        .search-form {
+            display: flex;
+        }
+        .search-form input[type="text"] {
+            padding: 5px;
+            margin-right: 5px;
+        }
+        .search-form input[type="button"] {
+            padding: 5px 10px;
+            background-color: #ff8000;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .main-content {
+            display: flex;
+            background-color: white;
+            padding: 20px;
+        }
+        .sidebar {
+            width: 150px;
+            background-color: #ff8000;
+            padding: 15px;
+            margin-right: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        .sidebar a:hover {
+            background-color: white;
+            color: #ff8000;
+        }
+        .content {
+            flex: 1;
+        }
+        .content h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff8000;
+        }
+        .content p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .content img {
+            float: left;
+            margin-right: 15px;
+            margin-bottom: 10px;
+            width: 150px;
+            height: auto;
+            border: 2px solid #ff8000;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .content table, .content th, .content td {
+            border: 2px solid #ff8000;
+            padding: 10px;
+            text-align: center;
+        }
+        .content th {
+            background-color: #ff8000;
+            color: white;
+        }
+        .content ul, .content ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        .content li {
+            margin-bottom: 5px;
+        }
+        .right-sidebar {
+            width: 190px;
+            background-color: #ff8000;
+            padding: 15px;
+            margin-left: 20px;
+            color: white;
+            text-align: center;
+        }
+        .right-sidebar div {
+            margin-bottom: 20px;
+        }
+        .footer {
+            background-color: #ff8000;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .important {
+            font-weight: bold;
+            color: #ff8000;
+        }
+        .italic {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка сайта -->
+        <div class="header">
+            <div class="logo">Логотип</div>
+            <div class="site-title">
+                <h1>НАЗВАНИЕ САЙТА</h1>
+            </div>
+            <div class="login-form">
+                <form>
+                    <input type="text" placeholder="Логин">
+                    <input type="password" placeholder="Пароль">
+                    <div>
+                        <input type="submit" value="Вход">
+                        <a href="#">Регистрация</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Навигация -->
+        <div class="nav">
+            <a href="#">Раздел 1</a>
+            <a href="#">Раздел 2</a>
+            <a href="#">Раздел 3</a>
+            <a href="#">Раздел 4</a>
+            <div class="search-form">
+                <input type="text" placeholder="Поиск">
+                <input type="button" value="Найти">
+            </div>
+        </div>
+
+        <!-- Основное содержимое -->
+        <div class="main-content">
+            <!-- Левая боковая панель -->
+            <div class="sidebar">
+                <a href="#">Категория 1</a>
+                <a href="#">Категория 2</a>
+                <a href="#">Категория 3</a>
+                <a href="#">Категория 4</a>
+            </div>
+
+            <!-- Центральный контент -->
+            <div class="content">
+                <h1>ЗАДАНИЕ 2</h1>
+                
+                <p>
+                    <img src="https://via.placeholder.com/150" alt="Замещающее изображение">
+                    Создать html-код, воспроизводящий данный макет. Ссылки из верхнего и бокового меню должны вести на существующие страницы. Содержание страниц произвольно, но структура должна повторять макет.
+                </p>
+                
+                <p>
+                    Несколько абзацев произвольного текста. <span class="important">Использовать теги p, br, h2.</span> Использовать 2-3 цвета, <span class="important">жирное</span> и <span class="italic">курсивное</span> начертание.
+                </p>
+                
+                <p>Сделать таблицу:</p>
+                
+                <table>
+                    <tr>
+                        <td rowspan="3">Общий столбец</td>
+                        <td colspan="2">Общий заголовок</td>
+                    </tr>
+                    <tr>
+                        <td>текст</td>
+                        <td>текст</td>
+                    </tr>
+                    <tr>
+                        <td>текст</td>
+                        <td>текст</td>
+                    </tr>
+                </table>
+                
+                <p>Создать списки:</p>
+                
+                <ul>
+                    <li>маркированный 1</li>
+                    <li>маркированный 2</li>
+                    <li>маркированный 3</li>
+                </ul>
+                
+                <ol type="a">
+                    <li>нумерованный 1</li>
+                    <li>нумерованный 2</li>
+                    <li>нумерованный 3</li>
+                </ol>
+                
+                <ol type="A">
+                    <li>многоуровневый 1
+                        <ul>
+                            <li>многоуровневый 1a</li>
+                            <li>многоуровневый 1b</li>
+                        </ul>
+                    </li>
+                    <li>многоуровневый 2</li>
+                    <li>многоуровневый 3</li>
+                </ol>
+                
+                <p>
+                    Для создания списков можно использовать атрибут <span class="important">type</span> со значениями "1", "I", "i", "A", "a" для нумерованных списков и "disk", "circle", "square" для маркированных.
+                </p>
+            </div>
+
+            <!-- Правая боковая панель -->
+            <div class="right-sidebar">
+                <div>Баннер 1</div>
+                <div>Баннер 2</div>
+                <div>Баннер 3</div>
+                <div>(баннер - рекламное изображение с ссылкой)</div>
+            </div>
+        </div>
+
+        <!-- Подвал -->
+        <div class="footer">
+            <p>Раздел 1 &nbsp;&nbsp;&nbsp; Раздел 2 &nbsp;&nbsp;&nbsp; Раздел 3</p>
+            <p>(подвал - повторяющаяся часть на всех страницах)</p>
+        </div>
+    </div>
+</body>
+</html>

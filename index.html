@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кофемания</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/cart.css">
+    <style>
+        /* Стили для всплывающего баннера авторизации */
+        .auth-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(93, 78, 55, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .auth-popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .auth-popup__content {
+            background: #F5F5DC;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(92, 64, 51, 0.2);
+            border: 1px solid #E6D7C3;
+            width: 90%;
+            max-width: 380px;
+            max-height: 500px;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .auth-popup.active .auth-popup__content {
+            transform: translateY(0);
+        }
+
+        .auth-popup__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid #E6D7C3;
+            background: #E6D7C3;
+            border-radius: 8px 8px 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .auth-popup__header h3 {
+            margin: 0;
+            color: #5C4033;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .auth-popup__close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #8B7355;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            line-height: 1;
+        }
+
+        .auth-popup__close:hover {
+            background: #D2691E;
+            color: #F5F5DC;
+        }
+
+        .auth-popup__body {
+            padding: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Стили для скроллбара */
+        .auth-popup__body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .auth-popup__body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .auth-popup__body::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .auth-popup__body::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .auth-popup__form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .auth-popup__input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .auth-popup__input-group label {
+            color: #5C4033;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .auth-popup__input-group input {
+            width: 100%;
+            height: 42px;
+            color: #5C4033;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #D2691E;
+            padding: 10px 12px;
+            background: #F5F5DC;
+            transition: border-color 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .auth-popup__input-group input:focus {
+            outline: none;
+            border-color: #800020;
+        }
+
+        .auth-popup__checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        .auth-popup__checkbox-group input {
+            margin-right: 6px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .auth-popup__checkbox-group label {
+            line-height: 1.3;
+            color: #5C4033;
+            font-size: 12px;
+        }
+
+        .auth-popup__buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .auth-popup__buttons .btn {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .auth-popup__login-btn,
+        .auth-popup__register-btn {
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 10px 16px;
+            font-size: 14px;
+        }
+
+        .auth-popup__switch {
+            text-align: center;
+            border-top: 1px solid #E6D7C3;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .auth-popup__switch p {
+            margin-bottom: 10px;
+            color: #5C4033;
+            font-size: 13px;
+        }
+
+        .auth-popup__switch-btn {
+            width: 100%;
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        /* Специфичные стили для формы регистрации */
+        #registerForm .auth-popup__input-group {
+            margin-bottom: 15px;
+        }
+
+        #registerForm .auth-popup__input-group input {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        #registerForm .auth-popup__checkbox-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+    <div class="header__up">
+        <div class="header__logotype">
+            <img src="img/logo.svg" alt="Кофемания">
+        </div>
+        <div class="header__site_name">
+            <h1>Кофемания</h1>
+        </div>
+        <div class="header__auth">
+            <!-- Корзина слева -->
+            <div class="cart-icon" onclick="toggleCartPopup()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.4 5.2 16.4H17M17 13V16.4M9 19C9 19.6 8.6 20 8 20C7.4 20 7 19.6 7 19C7 18.4 7.4 18 8 18C8.6 18 9 18.4 9 19ZM19 19C19 19.6 18.6 20 18 20C17.4 20 17 19.6 17 19C17 18.4 17.4 18 18 18C18.6 18 19 18.4 19 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+            <!-- Профиль справа -->
+            <div class="profile-icon" onclick="toggleAuthPopup()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+        <nav class="header__navbar navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar__links collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link navbar__link" href="menu.html">Меню</a></li>
+                        <li class="nav-item"><a class="nav-link navbar__link" href="coffe.html">Кофе</a></li>
+                        <li class="nav-item"><a class="nav-link navbar__link" href="cuchnya.html">Кулинария на заказ</a></li>
+                    </ul>
+                </div>
+                <div class="navbar__search">
+                    <form class="d-flex" action="">
+                        <input class="form-control me-2" type="text" name="поиск" placeholder="поиск" id="search">
+                        <button class="btn btn-outline-warning" type="submit">искать</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="content">
+        <div class="content__left">
+            <ul class="left__links">
+                <li><a class="left__link" href="index.html">Главная</a></li>
+                <li><a class="left__link" href="catalog.html">Каталог</a></li>
+                <li><a class="left__link" href="contacts.html">Контакты</a></li>
+                <li><a class="left__link" href="feedback.html">Отзывы</a></li>
+            </ul>
+        </div>
+        <div class="content__main">
+            <h1 class="main__page-name">Главная</h1>
+            <div class="restaurant-section">
+                <div class="restaurant-content">
+                    <h2 class="restaurant-title">Московские рестораны «Кофемания» появились в столице в 2001 году</h2>
+                    <p class="restaurant-text">Для многих гостей Кофемания – неотъемлемая часть жизни вот уже на протяжении 20 лет. Наши гости ценят чуткий сервис, неизменное качество и вкус блюд, напитков и десертов.</p>
+                    <p class="restaurant-text">С момента открытия первого ресторана и по сей день комфорт и благополучие гостей – наша главная забота. В Кофемании удачно сочетаются атмосфера уютной кофейни и ресторана высокой кухни с одними из лучших десертов в городе.</p>
+                    <p class="restaurant-text">Мы всегда тщательно отбираем ингредиенты для наших блюд – самые сочные и спелые фрукты, свежие ароматные овощи, лучшее мясо и рыбу. У нас работает собственный колбасный и мясной цех, пекарня, мастерская по приготовлению пасты и пельменей, кондитерское ателье Cake Buro, цех по обжару кофейного зерна.</p>
+                </div>
+                <div class="restaurant-image">
+                    <img src="img/shop.jpg" alt="Интерьер ресторана Кофемания" class="restaurant-photo">
+                </div>
+            </div>
+            <h2 class="main__page-sub-name">Наша команда</h2>
+            <p class="content-text">Наша команда – это профессионалы, влюбленные в кофе. Мы обучаем бариста, проводим дегустации и помогаем клиентам выбрать идеальный кофе для их вкуса.</p>
+            <div class="team-minimal">
+                <div class="team-principle">
+                    <h3>Эксперты по кофе</h3>
+                    <p>Наши бариста знают все секреты приготовления идеального кофе</p>
+                </div>
+                <div class="team-principle">
+                    <h3>Постоянное обучение</h3>
+                    <p>Мы постоянно совершенствуем свои навыки и изучаем новые техники</p>
+                </div>
+                <div class="team-principle">
+                    <h3>Индивидуальный подход</h3>
+                    <p>Каждый клиент получает персональные рекомендации и внимание</p>
+                </div>
+                <div class="team-principle">
+                    <h3>Страсть к своему делу</h3>
+                    <p>Мы искренне любим кофе и делимся этой страстью с гостями</p>
+                </div>
+            </div>
+        </div>
+        <div class="content__right">
+            <div class="right__banners">
+                <div class="right__banner">
+                    <a href="https://www.starbucks.com/"><img width="120px" src="img/starbucks.svg" alt=""></a>
+                </div>
+                <div class="right__banner">
+                    <a href="https://juliusmeinl.com/ru?ysclid=mfod8jlhy4414115555"><img width="120px" src="img/julius.jpg" alt=""></a>
+                </div>
+                <div class="right__banner">
+                    <a href="https://www.dallmayr.com/deen/coffee/"><img width="120px" src="img/dallmayr.jpg" alt=""></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <hr>
+       © ООО «Ортизей» 2001-2025. Все права защищены.
+    </div>
+
+    <!-- Всплывающий баннер авторизации -->
+    <div class="auth-popup" id="authPopup">
+        <div class="auth-popup__content">
+            <div class="auth-popup__header">
+                <h3 id="authPopupTitle">Вход в аккаунт</h3>
+                <button class="auth-popup__close" onclick="closeAuthPopup()">&times;</button>
+            </div>
+            <div class="auth-popup__body">
+                <!-- Форма входа -->
+                <form action="login.php" method="POST" class="auth-popup__form" id="loginForm">
+                    <div class="auth-popup__input-group">
+                        <label for="popupLogin">Логин:</label>
+                        <input type="text" name="login" id="popupLogin" placeholder="Введите логин" required>
+                    </div>
+                    <div class="auth-popup__input-group">
+                        <label for="popupPassword">Пароль:</label>
+                        <input type="password" name="password" id="popupPassword" placeholder="Введите пароль" required>
+                    </div>
+                    <div class="auth-popup__buttons">
+                        <button type="submit" class="btn btn-primary auth-popup__login-btn">Войти</button>
+                    </div>
+                </form>
+
+                <!-- Форма регистрации -->
+                <form action="register.php" method="POST" class="auth-popup__form" id="registerForm" style="display: none;">
+                    <div class="auth-popup__input-group">
+                        <label for="regFirstName">Имя:</label>
+                        <input type="text" name="first_name" id="regFirstName" placeholder="Введите имя" required>
+                    </div>
+                    <div class="auth-popup__input-group">
+                        <label for="regLastName">Фамилия:</label>
+                        <input type="text" name="last_name" id="regLastName" placeholder="Введите фамилию" required>
+                    </div>
+                    <div class="auth-popup__input-group">
+                        <label for="regPhone">Телефон:</label>
+                        <input type="tel" name="phone" id="regPhone" placeholder="+7 (___) ___-__-__" required>
+                    </div>
+                    <div class="auth-popup__input-group">
+                        <label for="regEmail">Email:</label>
+                        <input type="email" name="email" id="regEmail" placeholder="Введите email" required>
+                    </div>
+                    <div class="auth-popup__input-group">
+                        <label for="regLogin">Логин:</label>
+                        <input type="text" name="login" id="regLogin" placeholder="Введите логин" required>
+                    </div>
+                    <div class="auth-popup__input-group">
+                        <label for="regPassword">Пароль:</label>
+                        <input type="password" name="password" id="regPassword" placeholder="Введите пароль" required minlength="6">
+                    </div>
+                    <div class="auth-popup__checkbox-group">
+                        <input type="checkbox" name="privacy_policy" id="regPrivacyPolicy" required>
+                        <label for="regPrivacyPolicy">Я согласен с политикой конфиденциальности и обработки персональных данных</label>
+                    </div>
+                    <div class="auth-popup__buttons">
+                        <button type="submit" class="btn btn-success auth-popup__register-btn">Зарегистрироваться</button>
+                    </div>
+                </form>
+
+                <!-- Переключение между формами -->
+                <div class="auth-popup__switch">
+                    <div id="loginSwitchSection">
+                        <p>Нет аккаунта?</p>
+                        <button type="button" class="btn btn-outline-secondary auth-popup__switch-btn" onclick="showRegisterForm()">Регистрация</button>
+                    </div>
+                    <div id="registerSwitchSection" style="display: none;">
+                        <p>Уже есть аккаунт?</p>
+                        <button type="button" class="btn btn-outline-secondary auth-popup__switch-btn" onclick="showLoginForm()">Войти</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth-api.js"></script>
+    <script src="js/cart-api.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+<script>
+    // === СУЩЕСТВУЮЩИЙ КОД ДЛЯ РЕГИСТРАЦИИ ===
+    function toggleAuthPopup() {
+        const popup = document.getElementById('authPopup');
+        popup.classList.toggle('active');
+        showLoginForm();
+    }
+
+    function closeAuthPopup() {
+        const popup = document.getElementById('authPopup');
+        popup.classList.remove('active');
+    }
+
+    function showRegisterForm() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+        document.getElementById('loginSwitchSection').style.display = 'none';
+        document.getElementById('registerSwitchSection').style.display = 'block';
+        document.getElementById('authPopupTitle').textContent = 'Регистрация';
+        
+        const body = document.querySelector('.auth-popup__body');
+        body.scrollTop = 0;
+    }
+
+    function showLoginForm() {
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('loginSwitchSection').style.display = 'block';
+        document.getElementById('registerSwitchSection').style.display = 'none';
+        document.getElementById('authPopupTitle').textContent = 'Вход в аккаунт';
+        
+        const body = document.querySelector('.auth-popup__body');
+        body.scrollTop = 0;
+    }
+
+    // Маска для телефона
+    document.addEventListener('DOMContentLoaded', function() {
+        const phoneInput = document.getElementById('regPhone');
+        
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (!value.startsWith('7') && !value.startsWith('8')) {
+                value = '7' + value;
+            }
+            
+            let formattedValue = '+7';
+            if (value.length > 1) {
+                formattedValue += ' (' + value.substring(1, 4);
+            }
+            if (value.length >= 4) {
+                formattedValue += ') ' + value.substring(4, 7);
+            }
+            if (value.length >= 7) {
+                formattedValue += '-' + value.substring(7, 9);
+            }
+            if (value.length >= 9) {
+                formattedValue += '-' + value.substring(9, 11);
+            }
+            
+            e.target.value = formattedValue;
+        });
+
+        // Валидация формы регистрации
+        const registerForm = document.getElementById('registerForm');
+        registerForm.addEventListener('submit', function(e) {
+            const privacyCheckbox = document.getElementById('regPrivacyPolicy');
+            if (!privacyCheckbox.checked) {
+                e.preventDefault();
+                alert('Необходимо согласие с политикой конфиденциальности');
+                return false;
+            }
+            
+            const phoneValue = document.getElementById('regPhone').value;
+            const phoneRegex = /^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/;
+            if (!phoneRegex.test(phoneValue)) {
+                e.preventDefault();
+                alert('Пожалуйста, введите корректный номер телефона');
+                return false;
+            }
+        });
+
+        // Валидация формы входа
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', function(e) {
+            console.log('Форма входа отправлена');
+        });
+    });
+
+    // Закрытие по клику вне попапа
+    document.addEventListener('click', function(event) {
+        const popup = document.getElementById('authPopup');
+        const profileIcon = document.querySelector('.profile-icon');
+        
+        if (popup.classList.contains('active') && 
+            !popup.contains(event.target) && 
+            !profileIcon.contains(event.target)) {
+            closeAuthPopup();
+        }
+    });
+
+    // Закрытие по Escape
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeAuthPopup();
+        }
+    });
+
+
+
+</script>
+<!-- Всплывающая корзина -->
+<div class="cart-popup" id="cartPopup">
+    <div class="cart-popup__content">
+        <div class="cart-popup__header">
+            <h3>🛒 Корзина товаров</h3>
+            <button class="cart-popup__close" onclick="closeCartPopup()">&times;</button>
+        </div>
+        <div class="cart-popup__body">
+            <div id="cartItemsList">
+                <!-- Товары будут отображаться здесь -->
+            </div>
+            
+            <div class="cart-summary">
+                <div class="cart-total">
+                    Итого: <span id="cartTotal">0 ₽</span>
+                </div>
+                <button class="checkout-btn" onclick="checkout()" id="checkoutBtn" disabled>
+                    Оформить заказ
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,8 +1,37 @@
+// cart.js
 // === КОРЗИНА ===
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 // Проверяем, подключен ли API
 const isAPIAvailable = typeof window.cartAPI !== 'undefined';
+
+// Функция синхронизации корзины с API
+async function syncCartWithAPI() {
+    if (!isAPIAvailable || !window.cartAPI.token) {
+        console.log('API not available or user not authenticated');
+        return;
+    }
+
+    try {
+        const apiCart = await window.cartAPI.getCart();
+        
+        // Преобразуем API корзину в формат localStorage
+        cart = apiCart.items.map(item => ({
+            id: item.productId,
+            name: item.productName,
+            price: item.productPrice,
+            image: item.productImageUrl,
+            quantity: item.quantity
+        }));
+
+        // Обновляем localStorage
+        saveCart();
+        
+        console.log('Cart synced with API:', cart);
+    } catch (error) {
+        console.error('Failed to sync cart with API:', error);
+    }
+}
 
 // Основная функция добавления в корзину
 async function addToCart(id, name, price, image) {
@@ -73,32 +102,6 @@ async function addToCartAPI(id, name, price, image) {
         console.error('Failed to add to cart via API:', error);
         // Fallback to localStorage
         addToCartLocal(id, name, price, image);
-    }
-}
-
-async function syncCartWithAPI() {
-    if (!isAPIAvailable || !window.cartAPI.token) {
-        return;
-    }
-
-    try {
-        const apiCart = await window.cartAPI.getCart();
-        
-        // Преобразуем API корзину в формат localStorage
-        cart = apiCart.items.map(item => ({
-            id: item.productId,
-            name: item.productName,
-            price: item.productPrice,
-            image: item.productImageUrl,
-            quantity: item.quantity
-        }));
-
-        // Обновляем localStorage
-        saveCart();
-        
-        console.log('Cart synced with API');
-    } catch (error) {
-        console.error('Failed to sync cart with API:', error);
     }
 }
 
@@ -210,7 +213,32 @@ function renderCartPopup() {
     }
 }
 
-function updateCartQuantity(id, change) {
+// ОБНОВЛЕННАЯ функция updateCartQuantity для работы с API
+async function updateCartQuantity(id, change) {
+    const isAuthenticated = window.authAPI && window.authAPI.isAuthenticated();
+    
+    if (isAPIAvailable && isAuthenticated) {
+        try {
+            const itemIndex = cart.findIndex(item => item.id === id);
+            if (itemIndex === -1) return;
+            
+            const newQuantity = cart[itemIndex].quantity + change;
+            
+            if (newQuantity <= 0) {
+                await window.cartAPI.removeFromCart(id);
+            } else {
+                await window.cartAPI.updateCartItem(id, newQuantity);
+            }
+            
+            await syncCartWithAPI();
+            renderCartPopup();
+            return;
+        } catch (error) {
+            console.error('Failed to update cart via API:', error);
+        }
+    }
+    
+    // Fallback to localStorage
     const itemIndex = cart.findIndex(item => item.id === id);
     
     if (itemIndex !== -1) {
@@ -225,7 +253,22 @@ function updateCartQuantity(id, change) {
     }
 }
 
-function removeFromCart(id) {
+// ОБНОВЛЕННАЯ функция removeFromCart для работы с API
+async function removeFromCart(id) {
+    const isAuthenticated = window.authAPI && window.authAPI.isAuthenticated();
+    
+    if (isAPIAvailable && isAuthenticated) {
+        try {
+            await window.cartAPI.removeFromCart(id);
+            await syncCartWithAPI();
+            renderCartPopup();
+            return;
+        } catch (error) {
+            console.error('Failed to remove from cart via API:', error);
+        }
+    }
+    
+    // Fallback to localStorage
     cart = cart.filter(item => item.id !== id);
     saveCart();
     renderCartPopup();
@@ -242,6 +285,12 @@ function checkout() {
     
     alert(`Заказ оформлен!\n\nТовары:\n${itemList}\n\nОбщая сумма: ${total}`);
     
+    // Очищаем корзину через API если авторизованы
+    const isAuthenticated = window.authAPI && window.authAPI.isAuthenticated();
+    if (isAPIAvailable && isAuthenticated) {
+        window.cartAPI.clearCart().catch(console.error);
+    }
+    
     cart = [];
     saveCart();
     renderCartPopup();
@@ -251,6 +300,11 @@ function checkout() {
 // Инициализация корзины при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     updateCartCount();
+    
+    // Синхронизируем с API если пользователь авторизован
+    if (window.authAPI && window.authAPI.isAuthenticated() && isAPIAvailable) {
+        syncCartWithAPI();
+    }
     
     // Закрытие корзины по клику вне области
     document.addEventListener('click', function(event) {
@@ -286,7 +340,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     opacity: 1;
                 }
             }
+            
+            .cart-notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #4CAF50, #45a049);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+                font-size: 14px;
+                font-weight: 500;
+            }
         `;
         document.head.appendChild(style);
     }
 });
+
+// Экспортируем функции для использования в других модулях
+window.syncCartWithAPI = syncCartWithAPI;
+window.updateCartCount = updateCartCount;

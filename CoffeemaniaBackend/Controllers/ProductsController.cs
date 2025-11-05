@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using CoffeemaniaBackend.Services;
-using CoffeemaniaBackend.Models;
+using CoffeemaniaBackend.DTOs;
 
 namespace CoffeemaniaBackend.Controllers
 {
@@ -40,34 +39,22 @@ namespace CoffeemaniaBackend.Controllers
             return Ok(products);
         }
 
+        // Методы для создания/обновления товаров (можно использовать для инициализации данных)
         [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> CreateProduct([FromBody] Product product)
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
         {
-            var createdProduct = await _productService.CreateProductAsync(product);
-            return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.Id }, createdProduct);
+            var product = await _productService.CreateProductAsync(productDto);
+            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
         }
 
         [HttpPut("{id}")]
-        [Authorize]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product product)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] CreateProductDto productDto)
         {
-            var updatedProduct = await _productService.UpdateProductAsync(id, product);
+            var updatedProduct = await _productService.UpdateProductAsync(id, productDto);
             if (updatedProduct == null)
                 return NotFound();
 
             return Ok(updatedProduct);
-        }
-
-        [HttpDelete("{id}")]
-        [Authorize]
-        public async Task<IActionResult> DeleteProduct(int id)
-        {
-            var result = await _productService.DeleteProductAsync(id);
-            if (!result)
-                return NotFound();
-
-            return NoContent();
         }
     }
 }

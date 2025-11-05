@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CoffeemaniaBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1061dfed9e8242b4a7a6595b9613a125af655ee8")]
 [assembly: System.Reflection.AssemblyProductAttribute("CoffeemaniaBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CoffeemaniaBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

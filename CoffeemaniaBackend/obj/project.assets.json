@@ -2864,11 +2864,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Z\\Desktop\\Webium\\CoffeemaniaBackend\\CoffeemaniaBackend.csproj",
+      "projectUniqueName": "C:\\Программирование\\Web\\CoffeemaniaBackend\\CoffeemaniaBackend.csproj",
       "projectName": "CoffeemaniaBackend",
-      "projectPath": "C:\\Users\\Z\\Desktop\\Webium\\CoffeemaniaBackend\\CoffeemaniaBackend.csproj",
+      "projectPath": "C:\\Программирование\\Web\\CoffeemaniaBackend\\CoffeemaniaBackend.csproj",
       "packagesPath": "C:\\Users\\Z\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Z\\Desktop\\Webium\\CoffeemaniaBackend\\obj\\",
+      "outputPath": "C:\\Программирование\\Web\\CoffeemaniaBackend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

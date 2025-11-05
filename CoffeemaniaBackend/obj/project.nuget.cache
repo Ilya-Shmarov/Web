@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lYMR9tz1ZdjA87cSfNvOUwhHZOhhFqTwhSctDdVNaJNjtlUmg2Piq1k70mPojl782ScHR47P0qZHEdZgd/BizA==",
+  "dgSpecHash": "lMIfjd5EoJjqn/aeDYQvXzJcDq4XMtdVAWacMc9xMraWb9EVbjx0Hn2jgn/V46v0n31OHu4u8aza4tNYUKVKzg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Z\\Desktop\\Webium\\CoffeemaniaBackend\\CoffeemaniaBackend.csproj",
+  "projectFilePath": "C:\\Программирование\\Web\\CoffeemaniaBackend\\CoffeemaniaBackend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Z\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Z\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.10\\microsoft.aspnetcore.authentication.jwtbearer.8.0.10.nupkg.sha512",

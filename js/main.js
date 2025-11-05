@@ -31,17 +31,19 @@ async function initializeAndLoadProducts() {
         const category = getCurrentPageCategory();
         console.log(`Current page category: ${category}`);
         
-        // Пытаемся загрузить товары
+        // Сначала пытаемся загрузить товары через API
         let products = await loadProducts(category);
         
-        // Если товаров нет, предлагаем инициализировать
+        // Если товаров нет, используем статические данные
         if (products.length === 0) {
-            showProductsInitializationPrompt();
+            console.log('Товары не найдены через API, используем статические данные');
+            await window.fixCurrentPageProducts();
         }
         
     } catch (error) {
         console.error('Error loading products:', error);
-        showProductsError(error.message);
+        // При ошибке также используем статические данные
+        await window.fixCurrentPageProducts();
     }
 }
 
@@ -475,6 +477,57 @@ function showAuthNotification(message, type = 'info') {
     }, 4000);
 }
 
+// Отладочные функции для проверки категорий
+window.debugCategories = async function() {
+    console.log('=== ДЕБАГ КАТЕГОРИЙ ===');
+    
+    // Проверим текущую страницу и категорию
+    const currentPage = window.location.pathname.split('/').pop();
+    const currentCategory = getCurrentPageCategory();
+    console.log(`Текущая страница: ${currentPage}`);
+    console.log(`Определенная категория: ${currentCategory}`);
+    
+    // Проверим все товары в БД
+    try {
+        const allProducts = await window.productsAPI.getProducts();
+        console.log('Все товары в БД:');
+        allProducts.forEach(p => {
+            console.log(`- ${p.name} -> Категория: "${p.category}"`);
+        });
+        
+        // Проверим товары по категориям
+        const categories = ['coffee', 'menu', 'culinary'];
+        for (const category of categories) {
+            const products = await window.productsAPI.getProductsByCategory(category);
+            console.log(`\nТовары в категории "${category}":`);
+            products.forEach(p => console.log(`- ${p.name}`));
+        }
+        
+    } catch (error) {
+        console.error('Ошибка при отладке:', error);
+    }
+};
+
+// Функция для принудительного обновления цен с сервера
+window.forceRefreshProducts = async function() {
+    try {
+        console.log('Принудительное обновление товаров...');
+        const category = getCurrentPageCategory();
+        
+        // Очищаем кэш
+        if (window.productsAPI.clearCache) {
+            window.productsAPI.clearCache();
+        }
+        
+        // Перезагружаем товары
+        await loadProducts(category);
+        console.log('Товары обновлены!');
+        
+    } catch (error) {
+        console.error('Ошибка обновления:', error);
+    }
+};
+
 // Добавляем CSS стили для новых состояний
 if (!document.querySelector('#products-styles')) {
     const style = document.createElement('style');
@@ -550,3 +603,4 @@ if (!document.querySelector('#products-styles')) {
 window.loadProducts = loadProducts;
 window.getCurrentPageCategory = getCurrentPageCategory;
 window.retryLoadingProducts = retryLoadingProducts;
+window.initializeAndLoadProducts = initializeAndLoadProducts;

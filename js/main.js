@@ -25,25 +25,18 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeCommonHandlers();
 });
 
-// НОВАЯ ФУНКЦИЯ: Инициализация и загрузка товаров
+// Инициализация и загрузка товаров
 async function initializeAndLoadProducts() {
     try {
-        const category = getCurrentPageCategory();
-        console.log(`Current page category: ${category}`);
+        const categories = getCurrentPageCategory();
+        console.log(`Current page categories: ${categories}`);
         
-        // Сначала пытаемся загрузить товары через API
-        let products = await loadProducts(category);
-        
-        // Если товаров нет, используем статические данные
-        if (products.length === 0) {
-            console.log('Товары не найдены через API, используем статические данные');
-            await window.fixCurrentPageProducts();
-        }
+        // Пытаемся загрузить товары
+        let products = await loadProducts(categories);
         
     } catch (error) {
         console.error('Error loading products:', error);
-        // При ошибке также используем статические данные
-        await window.fixCurrentPageProducts();
+        showProductsError(error.message);
     }
 }
 
@@ -90,14 +83,16 @@ async function initializeDemoProducts() {
 }
 
 // Функции для работы с продуктами
-async function loadProducts(category = null) {
+async function loadProducts(categories = null) {
     try {
         let products;
         
-        if (category) {
-            console.log(`Loading products for category: ${category}`);
-            products = await window.productsAPI.getProductsByCategory(category);
-            console.log(`Found ${products.length} products in category ${category}:`, products.map(p => p.name));
+        if (categories) {
+            console.log(`Loading products for categories: ${categories}`);
+            // Получаем все товары и фильтруем по категориям
+            products = await window.productsAPI.getProducts();
+            products = products.filter(product => categories.includes(product.category));
+            console.log(`Found ${products.length} products in categories ${categories}:`, products.map(p => p.name));
         } else {
             console.log('Loading all products');
             products = await window.productsAPI.getProducts();
@@ -167,8 +162,8 @@ function showProductsError(message) {
 }
 
 function retryLoadingProducts() {
-    const currentPage = getCurrentPageCategory();
-    loadProducts(currentPage);
+    const categories = getCurrentPageCategory();
+    loadProducts(categories);
 }
 
 function getCurrentPageCategory() {
@@ -176,15 +171,15 @@ function getCurrentPageCategory() {
     const page = path.split('/').pop();
     
     const categoryMap = {
-        'coffe.html': 'coffee',
-        'menu.html': 'menu', 
-        'cuchnya.html': 'culinary',
+        'coffe.html': ['Зерновой кофе', 'Кофе в капсулах'], // Все категории кофе
+        'menu.html': ['Мясное блюдо', 'Хлебобулочное изделие'], // Все категории меню
+        'cuchnya.html': ['Мясное блюдо'], // Кулинария (только мясные блюда)
         'catalog.html': null // все товары
     };
     
-    const category = categoryMap[page] || null;
-    console.log(`Page: ${page}, Category: ${category}`);
-    return category;
+    const categories = categoryMap[page] || null;
+    console.log(`Page: ${page}, Categories: ${categories}`);
+    return categories;
 }
 
 function initializeCommonHandlers() {
@@ -483,9 +478,9 @@ window.debugCategories = async function() {
     
     // Проверим текущую страницу и категорию
     const currentPage = window.location.pathname.split('/').pop();
-    const currentCategory = getCurrentPageCategory();
+    const currentCategories = getCurrentPageCategory();
     console.log(`Текущая страница: ${currentPage}`);
-    console.log(`Определенная категория: ${currentCategory}`);
+    console.log(`Определенные категории: ${currentCategories}`);
     
     // Проверим все товары в БД
     try {
@@ -494,14 +489,6 @@ window.debugCategories = async function() {
         allProducts.forEach(p => {
             console.log(`- ${p.name} -> Категория: "${p.category}"`);
         });
-        
-        // Проверим товары по категориям
-        const categories = ['coffee', 'menu', 'culinary'];
-        for (const category of categories) {
-            const products = await window.productsAPI.getProductsByCategory(category);
-            console.log(`\nТовары в категории "${category}":`);
-            products.forEach(p => console.log(`- ${p.name}`));
-        }
         
     } catch (error) {
         console.error('Ошибка при отладке:', error);
@@ -512,15 +499,10 @@ window.debugCategories = async function() {
 window.forceRefreshProducts = async function() {
     try {
         console.log('Принудительное обновление товаров...');
-        const category = getCurrentPageCategory();
-        
-        // Очищаем кэш
-        if (window.productsAPI.clearCache) {
-            window.productsAPI.clearCache();
-        }
+        const categories = getCurrentPageCategory();
         
         // Перезагружаем товары
-        await loadProducts(category);
+        await loadProducts(categories);
         console.log('Товары обновлены!');
         
     } catch (error) {

@@ -19,7 +19,7 @@
         </div>
         <div class="header__auth">
             <!-- Корзина слева -->
-            <div class="cart-icon" onclick="toggleCart()">
+            <div class="cart-icon" onclick="toggleCartPopup()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.4 5.2 16.4H17M17 13V16.4M9 19C9 19.6 8.6 20 8 20C7.4 20 7 19.6 7 19C7 18.4 7.4 18 8 18C8.6 18 9 18.4 9 19ZM19 19C19 19.6 18.6 20 18 20C17.4 20 17 19.6 17 19C17 18.4 17.4 18 18 18C18.6 18 19 18.4 19 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -162,6 +162,30 @@
         </div>
     </div>
 
+    <!-- Всплывающая корзина -->
+    <div class="cart-popup" id="cartPopup">
+        <div class="cart-popup__content">
+            <div class="cart-popup__header">
+                <h3>🛒 Корзина товаров</h3>
+                <button class="cart-popup__close" onclick="closeCartPopup()">&times;</button>
+            </div>
+            <div class="cart-popup__body">
+                <div id="cartItemsList">
+                    <!-- Товары будут отображаться здесь -->
+                </div>
+                
+                <div class="cart-summary">
+                    <div class="cart-total">
+                        Итого: <span id="cartTotal">0 ₽</span>
+                    </div>
+                    <button class="checkout-btn" onclick="checkout()" id="checkoutBtn" disabled>
+                        Оформить заказ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/auth-api.js"></script>
     <script src="js/cart-api.js"></script>
@@ -279,6 +303,7 @@
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closeAuthPopup();
+                closeCartPopup();
             }
         });
     </script>

@@ -215,6 +215,11 @@ function renderCartPopup() {
 
 // ОБНОВЛЕННАЯ функция updateCartQuantity для работы с API
 async function updateCartQuantity(id, change) {
+    // Останавливаем всплытие события, чтобы корзина не закрывалась
+    if (event) {
+        event.stopPropagation();
+    }
+    
     const isAuthenticated = window.authAPI && window.authAPI.isAuthenticated();
     
     if (isAPIAvailable && isAuthenticated) {
@@ -255,6 +260,11 @@ async function updateCartQuantity(id, change) {
 
 // ОБНОВЛЕННАЯ функция removeFromCart для работы с API
 async function removeFromCart(id) {
+    // Останавливаем всплытие события, чтобы корзина не закрывалась
+    if (event) {
+        event.stopPropagation();
+    }
+    
     const isAuthenticated = window.authAPI && window.authAPI.isAuthenticated();
     
     if (isAPIAvailable && isAuthenticated) {
@@ -306,19 +316,10 @@ document.addEventListener('DOMContentLoaded', function() {
         syncCartWithAPI();
     }
     
-    // Закрытие корзины по клику вне области
-    document.addEventListener('click', function(event) {
-        const cartPopup = document.getElementById('cartPopup');
-        const cartIcon = document.querySelector('.cart-icon');
-        
-        if (cartPopup && cartPopup.classList.contains('active') && 
-            !cartPopup.contains(event.target) && 
-            !cartIcon.contains(event.target)) {
-            closeCartPopup();
-        }
-    });
-
-    // Закрытие по Escape
+    // УДАЛЕНО: Закрытие корзины по клику вне области
+    // Теперь корзина закрывается только по крестику
+    
+    // Закрытие по Escape остается
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
             closeCartPopup();

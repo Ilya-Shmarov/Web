@@ -93,7 +93,7 @@ class ProductsAPI {
 
             console.log('Создаем начальные товары...');
 
-            // Статические товары из HTML с правильными категориями из базы данных
+            // Статические товары из HTML с обновленными категориями
             const staticProducts = [
                 {
                     name: "Кофе в зернах Эспрессо",
@@ -172,7 +172,7 @@ class ProductsAPI {
                     price: 2900,
                     imageUrl: "img/kotieta.jpg",
                     shortDescription: "Нежные котлеты из молодого ягнёнка с аро...",
-                    category: "Мясное блюдо",
+                    category: "Заморозка",
                     weight: 250,
                     calories: 331,
                     proteins: 13.9,
@@ -184,7 +184,7 @@ class ProductsAPI {
                     price: 1200,
                     imageUrl: "img/cobas.jpg",
                     shortDescription: "Нежные диетические колбаски из филе инд...",
-                    category: "Мясное блюдо",
+                    category: "Заморозка",
                     weight: 250,
                     calories: 331,
                     proteins: 13.9,
@@ -196,7 +196,7 @@ class ProductsAPI {
                     price: 950,
                     imageUrl: "img/chiken.jpg",
                     shortDescription: "Сочная курица, маринованная в ароматной с...",
-                    category: "Мясное блюдо",
+                    category: "Заморозка",
                     weight: 250,
                     calories: 331,
                     proteins: 13.9,
@@ -222,6 +222,7 @@ class ProductsAPI {
             console.log('- Кофе в капсулах:', createdProducts.filter(p => p.category === 'Кофе в капсулах').map(p => p.name));
             console.log('- Мясное блюдо:', createdProducts.filter(p => p.category === 'Мясное блюдо').map(p => p.name));
             console.log('- Хлебобулочное изделие:', createdProducts.filter(p => p.category === 'Хлебобулочное изделие').map(p => p.name));
+            console.log('- Заморозка:', createdProducts.filter(p => p.category === 'Заморозка').map(p => p.name));
 
             console.log(`Создано ${createdProducts.length} товаров`);
             return createdProducts;

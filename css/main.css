@@ -1463,178 +1463,89 @@ body {
     .team-principle p {
         font-size: 14px;
     }
-/* Стили для нового слайдера товара */
-.product-slider-new {
-    width: 100%;
-    max-width: 500px;
-    height: 400px;
-    overflow: hidden;
+.product-slider {
     position: relative;
-    border-radius: 8px;
-    background: #f9f9f9;
-    margin-bottom: 20px;
+    width: 250px;
+    height: 250px;
+    overflow: hidden;
+    border-radius: 6px;
 }
 
-.product-slider-new .slides {
-    display: flex;
+.slider-container {
+    position: relative;
     width: 100%;
     height: 100%;
-    transition: transform 0.5s ease-in-out;
 }
 
-.product-slider-new .slide {
-    width: 100%;
-    height: 100%;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.product-slider-new .slide img {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    border-radius: 4px;
-}
-
-/* Скрываем радиокнопки */
-.product-slider-new input[type="radio"] {
-    display: none;
-}
-
-/* Переключение слайдов при выборе радиокнопки */
-.product-slider-new #slide1:checked ~ .slides { transform: translateX(0%); }
-.product-slider-new #slide2:checked ~ .slides { transform: translateX(-100%); }
-.product-slider-new #slide3:checked ~ .slides { transform: translateX(-200%); }
-.product-slider-new #slide4:checked ~ .slides { transform: translateX(-300%); }
-
-/* Контейнер для точек управления */
-.product-slider-new .controls {
-    text-align: center;
+.slide {
     position: absolute;
-    bottom: 15px;
+    top: 0;
     left: 0;
-    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.slide.active {
+    opacity: 1;
     z-index: 2;
 }
 
-/* Стиль для точек переключения */
-.product-slider-new .controls label {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    margin: 0 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
-/* Меняем цвет активной точки при выборе слайда */
-.product-slider-new #slide1:checked ~ .controls label:nth-child(1),
-.product-slider-new #slide2:checked ~ .controls label:nth-child(2),
-.product-slider-new #slide3:checked ~ .controls label:nth-child(3),
-.product-slider-new #slide4:checked ~ .controls label:nth-child(4) {
-    background: #5C4033;
-    transform: scale(1.2);
-}
-
-.product-slider-new .controls label:hover {
-    background: rgba(92, 64, 51, 0.7);
-}
-
-/* Кнопки навигации */
-.product-slider-new .slider-btn {
+/* Стрелки */
+.slider-arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(92, 64, 51, 0.7);
-    color: white;
+    background: rgba(0,0,0,0.5);
     border: none;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: white;
     cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
-    z-index: 2;
-    transition: all 0.3s ease;
-}
-
-.product-slider-new .slider-btn:hover {
-    background: rgba(92, 64, 51, 0.9);
-    transform: translateY(-50%) scale(1.1);
-}
-
-.product-slider-new .prev {
-    left: 15px;
-}
-
-.product-slider-new .next {
-    right: 15px;
-}
-
-/* Статичное изображение */
-.product-image-static {
-    width: 100%;
-    max-width: 500px;
-    height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f9f9f9;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
+    z-index: 5;
 }
 
-.product-image-static img {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    border-radius: 4px;
+.slider-arrow-prev {
+    left: 10px;
 }
 
-/* Адаптивность */
-@media (max-width: 768px) {
-    .product-slider-new,
-    .product-image-static {
-        height: 300px;
-    }
-    
-    .product-slider-new .slider-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 16px;
-    }
+.slider-arrow-next {
+    right: 10px;
 }
 
-@media (max-width: 480px) {
-    .product-slider-new,
-    .product-image-static {
-        height: 250px;
-    }
-    
-    .product-slider-new .slider-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 14px;
-    }
-    
-    .product-slider-new .controls label {
-        width: 10px;
-        height: 10px;
-    }
+/* Точки */
+.slider-indicators {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 5;
+}
+
+.indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    border: none;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.indicator.active {
+    background: #5C4033;
 }
 
 }

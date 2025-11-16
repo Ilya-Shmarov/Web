@@ -68,7 +68,9 @@
             <h1 class="main__page-name">Фокачча Аль Печино</h1>
             <div class="product">
                 <div class="product__info">
-                    <img class="product__img" src="img/fokacha.jpg" alt="Фокачча Аль Печино">
+                   <div id="productImageContainer">
+                        <img class="product__img" src="img/fokacha.jpg" alt="Фокачча Аль Печино">
+                    </div>
                     <div class="product__char">
                         <h3 class="product-section-title">Краткое описание товара</h3>
                         <p class="product-short-description">Ароматная итальянская фокачча с оливковым маслом, розмарином и морской солью. Идеальная закуска к кофе или легкий перекус. Традиционный рецепт, выпеченный в дровяной печи для неповторимого вкуса и хрустящей корочки.</p>
@@ -339,5 +341,14 @@
             }
         });
     </script>
+    <script>
+        // Передаем данные товара в слайдер
+        window.currentProduct = {
+            name: 'Фокачча Аль Печино',
+            imageUrl: 'img/fokacha.jpg',
+            imageUrl2: 'img/fokacha2.jpg' // Добавить второе изображение
+        };
+    </script>
+    <script src="js/product-slider.js"></script>
 </body>
 </html>

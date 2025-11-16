@@ -69,7 +69,9 @@
             <h1 class="main__page-name">Кофе в зернах Эспрессо</h1>
             <div class="product">
                 <div class="product__info">
-                    <img class="product__img" src="img/arabica.jpg" alt="Кофе Арабика">
+                    <div id="productImageContainer">
+                        <img class="product__img" src="img/arabica.jpg" alt="Кофе Арабика">
+                    </div>
                     <div class="product__char">
                         <h3 class="product-section-title">Краткое описание товара</h3>
                         <p class="product-short-description">Кофе Эспрессо премиального качества, выращенный на высокогорьях Эфиопии. Обладает мягким вкусом с нотами цитруса и цветов, идеально подходит для приготовления эспрессо и фильтр-кофе.</p>
@@ -221,6 +223,16 @@
         });
     </script>
     
+    <script>
+        // Передаем данные товара в слайдер
+        window.currentProduct = {
+            name: 'Кофе в зернах Эспрессо',
+            imageUrl: 'img/arabica.jpg',
+            imageUrl2: 'img/arabica2.jpg' // Добавить второе изображение
+        };
+    </script>
+    <script src="js/product-slider.js"></script>
+
     <!-- Всплывающая корзина -->
     <div class="cart-popup" id="cartPopup">
         <div class="cart-popup__content">

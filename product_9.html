@@ -68,7 +68,9 @@
             <h1 class="main__page-name">Маринованная курица</h1>
             <div class="product">
                 <div class="product__info">
-                    <img class="product__img" src="img/chiken.jpg" alt="Маринованная курица">
+                    <div id="productImageContainer">
+                        <img class="product__img" src="img/chiken.jpg" alt="Маринованная курица">
+                    </div>
                     <div class="product__char">
                         <h3 class="product-section-title">Краткое описание товара</h3>
                         <p class="product-short-description">Сочная курица, маринованная в ароматной смеси специй, трав и лимонного сока. Идеально подходит для запекания, жарки на гриле или приготовления в духовке. Готова к термической обработке.</p>
@@ -339,5 +341,14 @@
             }
         });
     </script>
+    <script>
+        // Передаем данные товара в слайдер
+        window.currentProduct = {
+            name: 'Маринованная курица',
+            imageUrl: 'img/chiken.jpg',
+            imageUrl2: 'img/chiken2.jpg' // Добавить второе изображение
+        };
+    </script>
+    <script src="js/product-slider.js"></script>
 </body>
 </html>

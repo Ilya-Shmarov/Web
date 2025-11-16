@@ -68,7 +68,9 @@
             <h1 class="main__page-name">Котлеты с ягнёнком</h1>
             <div class="product">
                 <div class="product__info">
-                    <img class="product__img" src="img/kotleta.jpg" alt="Котлеты с ягнёнком">
+                    <div id="productImageContainer">
+                        <img class="product__img" src="img/kotleta.jpg" alt="Котлеты с ягнёнком">
+                    </div>
                     <div class="product__char">
                         <h3 class="product-section-title">Краткое описание товара</h3>
                         <p class="product-short-description">Нежные котлеты из молодого ягнёнка с ароматными травами и специями. Идеально прожаренные с золотистой корочкой и сочной мякотью внутри. Подаются с картофельным пюре и сезонными овощами.</p>
@@ -339,5 +341,14 @@
             }
         });
     </script>
+    <script>
+        // Передаем данные товара в слайдер
+        window.currentProduct = {
+            name: 'Котлеты с ягнёнком',
+            imageUrl: 'img/kotleta.jpg',
+            imageUrl2: 'img/kotleta2.jpg' // Добавить второе изображение
+        };
+    </script>
+    <script src="js/product-slider.js"></script>
 </body>
 </html>

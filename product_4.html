@@ -68,7 +68,9 @@
             <h1 class="main__page-name">Рулет из говяжьих хвостов</h1>
             <div class="product">
                 <div class="product__info">
-                    <img class="product__img" src="img/cow.jpg" alt="Рулет из говяжьих хвостов">
+                    <div id="productImageContainer">
+                        <img class="product__img" src="img/cow.jpg" alt="Рулет из говяжьих хвостов">
+                    </div>
                     <div class="product__char">
                         <h3 class="product-section-title">Краткое описание товара</h3>
                         <p class="product-short-description">Нежный рулет из отборных говяжьих хвостов с ароматными травами и специями. Идеальное блюдо для праздничного стола или особого ужина. Мясо томленое до мягкости, с насыщенным вкусом и аппетитной золотистой корочкой.</p>
@@ -339,5 +341,14 @@
             }
         });
     </script>
+    <script>
+        // Передаем данные товара в слайдер
+        window.currentProduct = {
+            name: 'Рулет из говяжьих хвостов',
+            imageUrl: 'img/cow.jpg',
+            imageUrl2: 'img/cow2.jpg' // Добавить второе изображение
+        };
+    </script>
+    <script src="js/product-slider.js"></script>
 </body>
 </html>

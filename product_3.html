@@ -68,7 +68,9 @@
             <h1 class="main__page-name">Кофе в капсулах</h1>
             <div class="product">
                 <div class="product__info">
-                    <img class="product__img" src="img/capsuls.jpg" alt="Капсулы">
+                    <div id="productImageContainer">
+                        <img class="product__img" src="img/capsuls.jpg" alt="Кофе в капсулах">
+                    </div>
                     <div class="product__char">
                         <h3>Краткое описание</h3>
                         <p>Кофе в капсулах — это удобный формат приготовления напитка: порция натурального обжаренного и молотого кофе, спрессованная в герметичной упаковке из пластика или алюминия. Капсулы защищают аромат и вкус от воздуха и света, обеспечивая стабильное качество.</p>
@@ -201,5 +203,14 @@
             }
         });
     </script>
+    <script>
+        // Передаем данные товара в слайдер
+        window.currentProduct = {
+            name: 'Кофе в капсулах',
+            imageUrl: 'img/capsuls.jpg',
+            imageUrl2: 'img/capsuls2.jpg' // Добавить второе изображение
+        };
+    </script>
+    <script src="js/product-slider.js"></script>
 </body>
 </html>

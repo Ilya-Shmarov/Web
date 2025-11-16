@@ -68,7 +68,9 @@
             <h1 class="main__page-name">Утка по-пекински</h1>
             <div class="product">
                 <div class="product__info">
-                    <img class="product__img" src="img/utka.jpg" alt="Утка по-пекински">
+                    <div id="productImageContainer">
+                        <img class="product__img" src="img/utka.jpg" alt="Утка по-пекински">
+                    </div>
                     <div class="product__char">
                         <h3 class="product-section-title">Краткое описание товара</h3>
                         <p class="product-short-description">Знаменитое блюдо китайской кухни - хрустящая утка с тонкой золотистой корочкой и нежным сочным мясом. Подается с традиционными лепешками, свежим огурцом, зеленым луком и сладким соусом Хойсин.</p>
@@ -339,5 +341,14 @@
             }
         });
     </script>
+    <script>
+        // Передаем данные товара в слайдер
+        window.currentProduct = {
+            name: 'Утка по-пекински',
+            imageUrl: 'img/utka.jpg',
+            imageUrl2: 'img/utka2.jpg' // Добавить второе изображение
+        };
+    </script>
+    <script src="js/product-slider.js"></script>
 </body>
 </html>

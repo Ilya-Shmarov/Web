@@ -68,7 +68,9 @@
             <h1 class="main__page-name">Кофе в зёрнах Декаф Колумбия</h1>
             <div class="product">
                 <div class="product__info">
-                    <img class="product__img" src="img/espresso.jpg" alt="Кофе в зёрнах">
+                    <div id="productImageContainer">
+                        <img class="product__img" src="img/espresso.jpg" alt="Кофе Декаф Колумбия">
+                    </div>
                     <div class="product__char">
                         <h3>Краткое описание</h3>
                         <p>Кофе в зёрнах Декаф Колумбия — это ароматный и насыщенный кофе с мягким вкусом, созданный из высококачественных колумбийских зерен. Подходит для ценителей кофе, предпочитающих безкофеиновый вариант, идеален для домашнего использования.</p>
@@ -201,5 +203,14 @@
             }
         });
     </script>
+    <script>
+        // Передаем данные товара в слайдер
+        window.currentProduct = {
+            name: 'Кофе в зернах Декаф Колумбия',
+            imageUrl: 'img/espresso.jpg',
+            imageUrl2: 'img/espresso2.jpg' // Добавить второе изображение
+        };
+    </script>
+    <script src="js/product-slider.js"></script>
 </body>
 </html>

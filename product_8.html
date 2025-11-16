@@ -68,7 +68,9 @@
             <h1 class="main__page-name">Колбаски из индейки</h1>
             <div class="product">
                 <div class="product__info">
-                    <img class="product__img" src="img/colbas.jpg" alt="Колбаски из индейки">
+                    <div id="productImageContainer">
+                        <img class="product__img" src="img/indi.jpg" alt="Колбаски из индейки">
+                    </div>
                     <div class="product__char">
                         <h3 class="product-section-title">Краткое описание товара</h3>
                         <p class="product-short-description">Нежные диетические колбаски из филе индейки с ароматными травами и натуральными специями. Идеально подходят для здорового питания, содержат минимальное количество жира и обладают прекрасным вкусом.</p>
@@ -339,5 +341,14 @@
             }
         });
     </script>
+    <script>
+        // Передаем данные товара в слайдер
+        window.currentProduct = {
+            name: 'Колбасы из индейки',
+            imageUrl: 'img/indi.jpg',
+            imageUrl2: 'img/indi2.jpg' // Добавить второе изображение
+        };
+    </script>
+    <script src="js/product-slider.js"></script>
 </body>
 </html>

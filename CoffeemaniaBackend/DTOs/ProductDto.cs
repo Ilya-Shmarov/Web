@@ -1,4 +1,3 @@
-// ProductDto.cs
 namespace CoffeemaniaBackend.DTOs
 {
     public class ProductDto
@@ -7,6 +6,7 @@ namespace CoffeemaniaBackend.DTOs
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
+        public string ImageUrl2 { get; set; } // Новое поле
         public string ShortDescription { get; set; }
         public string DetailedDescription { get; set; }
         public string Category { get; set; }
@@ -23,6 +23,7 @@ namespace CoffeemaniaBackend.DTOs
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
+        public string ImageUrl2 { get; set; } // Новое поле
         public string ShortDescription { get; set; }
         public string DetailedDescription { get; set; }
         public string Category { get; set; }

@@ -26,6 +26,7 @@ namespace CoffeemaniaBackend.Services
                 Name = p.Name,
                 Price = p.Price,
                 ImageUrl = p.ImageUrl,
+                ImageUrl2 = p.ImageUrl2, // Добавляем новое поле
                 ShortDescription = p.ShortDescription,
                 DetailedDescription = p.DetailedDescription,
                 Category = p.Category,
@@ -50,6 +51,7 @@ namespace CoffeemaniaBackend.Services
                 Name = product.Name,
                 Price = product.Price,
                 ImageUrl = product.ImageUrl,
+                ImageUrl2 = product.ImageUrl2, // Добавляем новое поле
                 ShortDescription = product.ShortDescription,
                 DetailedDescription = product.DetailedDescription,
                 Category = product.Category,
@@ -75,6 +77,7 @@ namespace CoffeemaniaBackend.Services
                 Name = p.Name,
                 Price = p.Price,
                 ImageUrl = p.ImageUrl,
+                ImageUrl2 = p.ImageUrl2, // Добавляем новое поле
                 ShortDescription = p.ShortDescription,
                 DetailedDescription = p.DetailedDescription,
                 Category = p.Category,
@@ -94,6 +97,7 @@ namespace CoffeemaniaBackend.Services
                 Name = productDto.Name,
                 Price = productDto.Price,
                 ImageUrl = productDto.ImageUrl,
+                ImageUrl2 = productDto.ImageUrl2, // Добавляем новое поле
                 ShortDescription = productDto.ShortDescription,
                 DetailedDescription = productDto.DetailedDescription,
                 Category = productDto.Category,
@@ -115,6 +119,7 @@ namespace CoffeemaniaBackend.Services
                 Name = product.Name,
                 Price = product.Price,
                 ImageUrl = product.ImageUrl,
+                ImageUrl2 = product.ImageUrl2, // Добавляем новое поле
                 ShortDescription = product.ShortDescription,
                 DetailedDescription = product.DetailedDescription,
                 Category = product.Category,
@@ -136,6 +141,7 @@ namespace CoffeemaniaBackend.Services
             existingProduct.Name = productDto.Name;
             existingProduct.Price = productDto.Price;
             existingProduct.ImageUrl = productDto.ImageUrl;
+            existingProduct.ImageUrl2 = productDto.ImageUrl2; // Добавляем новое поле
             existingProduct.ShortDescription = productDto.ShortDescription;
             existingProduct.DetailedDescription = productDto.DetailedDescription;
             existingProduct.Category = productDto.Category;
@@ -154,6 +160,7 @@ namespace CoffeemaniaBackend.Services
                 Name = existingProduct.Name,
                 Price = existingProduct.Price,
                 ImageUrl = existingProduct.ImageUrl,
+                ImageUrl2 = existingProduct.ImageUrl2, // Добавляем новое поле
                 ShortDescription = existingProduct.ShortDescription,
                 DetailedDescription = existingProduct.DetailedDescription,
                 Category = existingProduct.Category,
@@ -175,6 +182,36 @@ namespace CoffeemaniaBackend.Services
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        // Новый метод для поиска товаров
+        public async Task<List<ProductDto>> SearchProductsAsync(string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+                return await GetProductsAsync();
+
+            var products = await _context.Products
+                .Where(p => p.Name.ToLower().Contains(searchTerm.ToLower()))
+                .OrderBy(p => p.Name)
+                .ToListAsync();
+
+            return products.Select(p => new ProductDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                ImageUrl = p.ImageUrl,
+                ImageUrl2 = p.ImageUrl2,
+                ShortDescription = p.ShortDescription,
+                DetailedDescription = p.DetailedDescription,
+                Category = p.Category,
+                Weight = p.Weight,
+                Calories = p.Calories,
+                Proteins = p.Proteins,
+                Fats = p.Fats,
+                Carbohydrates = p.Carbohydrates,
+                CreatedAt = p.CreatedAt
+            }).ToList();
         }
     }
 }

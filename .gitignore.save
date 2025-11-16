@@ -1,0 +1,10 @@
+.vs/
+*.user
+*.suo
+*.aps
+*.cache
+*.ilk
+*.ncb
+*.log
+*.sln.docstates
+

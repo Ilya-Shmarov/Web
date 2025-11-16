@@ -7,6 +7,7 @@ namespace CoffeemaniaBackend.Services
         Task<List<ProductDto>> GetProductsAsync();
         Task<ProductDto> GetProductByIdAsync(int id);
         Task<List<ProductDto>> GetProductsByCategoryAsync(string category);
+        Task<List<ProductDto>> SearchProductsAsync(string searchTerm); // Новый метод
         Task<ProductDto> CreateProductAsync(CreateProductDto product);
         Task<ProductDto> UpdateProductAsync(int id, CreateProductDto product);
         Task<bool> DeleteProductAsync(int id);

@@ -16,8 +16,16 @@ namespace CoffeemaniaBackend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts()
+        public async Task<IActionResult> GetProducts([FromQuery] string search = null)
         {
+            // Если передан параметр search, используем поиск
+            if (!string.IsNullOrEmpty(search))
+            {
+                var searchResults = await _productService.SearchProductsAsync(search);
+                return Ok(searchResults);
+            }
+
+            // Иначе возвращаем все товары
             var products = await _productService.GetProductsAsync();
             return Ok(products);
         }
@@ -36,6 +44,13 @@ namespace CoffeemaniaBackend.Controllers
         public async Task<IActionResult> GetProductsByCategory(string category)
         {
             var products = await _productService.GetProductsByCategoryAsync(category);
+            return Ok(products);
+        }
+
+        [HttpGet("search/{searchTerm}")]
+        public async Task<IActionResult> SearchProducts(string searchTerm)
+        {
+            var products = await _productService.SearchProductsAsync(searchTerm);
             return Ok(products);
         }
 

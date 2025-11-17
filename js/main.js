@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Добавляем обработчики для всех страниц
     initializeCommonHandlers();
+    
+    // Инициализируем поиск
+    initializeSearch();
 });
 
 // Инициализация и загрузка товаров
@@ -253,6 +256,175 @@ function getCurrentPageCategory() {
     const categories = categoryMap[page] || null;
     console.log(`Page: ${page}, Categories: ${categories}`);
     return categories;
+}
+
+// ФУНКЦИИ ДЛЯ ПОИСКА
+function initializeSearch() {
+    const searchInput = document.getElementById('search');
+    const searchForm = document.querySelector('.navbar__search form');
+    
+    if (!searchInput || !searchForm) return;
+    
+    // Обработчик отправки формы
+    searchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        handleSearch();
+    });
+    
+    // Обработчик ввода в реальном времени с debounce
+    let searchTimeout;
+    searchInput.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            handleSearch();
+        }, 300); // Задержка 300ms
+    });
+    
+    // Обработчик очистки (при нажатии Escape)
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            searchInput.value = '';
+            handleSearch();
+        }
+    });
+}
+
+// Основная функция поиска
+async function handleSearch() {
+    const searchInput = document.getElementById('search');
+    const searchQuery = searchInput.value.trim();
+    
+    console.log(`Search query: "${searchQuery}"`);
+    
+    try {
+        let products;
+        
+        if (searchQuery === '') {
+            // Если запрос пустой, загружаем товары по категории страницы
+            const categories = getCurrentPageCategory();
+            products = await loadProducts(categories);
+        } else {
+            // Выполняем поиск
+            products = await searchProducts(searchQuery);
+            renderSearchResults(products, searchQuery);
+        }
+        
+        return products;
+    } catch (error) {
+        console.error('Search error:', error);
+        showSearchError(error.message);
+        return [];
+    }
+}
+
+// Функция поиска через API
+async function searchProducts(query) {
+    try {
+        console.log(`Searching products for: "${query}"`);
+        
+        // Используем метод поиска из API
+        let products;
+        if (window.productsAPI && window.productsAPI.searchProducts) {
+            products = await window.productsAPI.searchProducts(query);
+        } else {
+            // Fallback: фильтрация на клиенте
+            const allProducts = await window.productsAPI.getProducts();
+            products = allProducts.filter(product => 
+                product.name.toLowerCase().includes(query.toLowerCase())
+            );
+        }
+        
+        console.log(`Found ${products.length} products for search: "${query}"`);
+        return products;
+    } catch (error) {
+        console.error('Search API error:', error);
+        // Fallback на клиентскую фильтрацию
+        const allProducts = await window.productsAPI.getProducts();
+        return allProducts.filter(product => 
+            product.name.toLowerCase().includes(query.toLowerCase())
+        );
+    }
+}
+
+// Рендеринг результатов поиска
+function renderSearchResults(products, searchQuery) {
+    const catalogContainer = document.querySelector('.catalog');
+    if (!catalogContainer) return;
+    
+    if (products.length === 0 && searchQuery !== '') {
+        catalogContainer.innerHTML = `
+            <div class="search-empty">
+                <div style="font-size: 48px; margin-bottom: 10px;">🔍</div>
+                <h4>По вашему запросу ничего не найдено</h4>
+                <p>Попробуйте изменить поисковый запрос или посмотрите другие товары</p>
+                <button onclick="clearSearch()" class="retry-btn" style="background: #8B4513; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-top: 10px;">
+                    Показать все товары
+                </button>
+            </div>
+        `;
+    } else if (products.length > 0 && searchQuery !== '') {
+        // Показываем количество найденных товаров
+        const searchInfo = document.createElement('div');
+        searchInfo.className = 'search-info';
+        searchInfo.style.cssText = `
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f5f0;
+            border-radius: 6px;
+            border-left: 4px solid #8B4513;
+        `;
+        searchInfo.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>Результаты поиска:</strong> 
+                    Найдено ${products.length} товаров по запросу "${searchQuery}"
+                </div>
+                <button onclick="clearSearch()" style="background: none; border: 1px solid #8B4513; color: #8B4513; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                    Очистить
+                </button>
+            </div>
+        `;
+        
+        // Вставляем информацию о поиске перед товарами
+        const existingSearchInfo = catalogContainer.querySelector('.search-info');
+        if (existingSearchInfo) {
+            existingSearchInfo.remove();
+        }
+        catalogContainer.insertBefore(searchInfo, catalogContainer.firstChild);
+        
+        // Рендерим товары
+        renderProducts(products);
+    } else {
+        // Обычный рендеринг товаров
+        renderProducts(products);
+    }
+}
+
+// Очистка поиска
+function clearSearch() {
+    const searchInput = document.getElementById('search');
+    if (searchInput) {
+        searchInput.value = '';
+        handleSearch();
+    }
+}
+
+// Показать ошибку поиска
+function showSearchError(message) {
+    const catalogContainer = document.querySelector('.catalog');
+    if (catalogContainer) {
+        catalogContainer.innerHTML = `
+            <div class="search-error">
+                <div style="font-size: 48px; margin-bottom: 10px;">⚠️</div>
+                <h4>Ошибка поиска</h4>
+                <p>${message}</p>
+                <button onclick="handleSearch()" class="retry-btn">Попробовать снова</button>
+                <button onclick="clearSearch()" class="retry-btn" style="background: #666; margin-left: 10px;">
+                    Показать все товары
+                </button>
+            </div>
+        `;
+    }
 }
 
 function initializeCommonHandlers() {
@@ -663,6 +835,26 @@ if (!document.querySelector('#products-styles')) {
             animation: pulse 1.5s infinite;
         }
         
+        .search-empty, .search-error {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .search-empty h4, .search-error h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .search-info {
+            text-align: left;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f5f0;
+            border-radius: 6px;
+            border-left: 4px solid #8B4513;
+        }
+        
         @keyframes pulse {
             0% { opacity: 1; }
             50% { opacity: 0.7; }
@@ -699,3 +891,6 @@ window.loadProducts = loadProducts;
 window.getCurrentPageCategory = getCurrentPageCategory;
 window.retryLoadingProducts = retryLoadingProducts;
 window.initializeAndLoadProducts = initializeAndLoadProducts;
+window.handleSearch = handleSearch;
+window.clearSearch = clearSearch;
+window.searchProducts = searchProducts;

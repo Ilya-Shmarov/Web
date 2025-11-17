@@ -57,6 +57,20 @@ class ProductsAPI {
         return await this.makeRequest(`/products/category/${category}`);
     }
 
+    // Поиск товаров по названию
+    async searchProducts(query) {
+        if (!query || query.trim() === '') {
+            return await this.getProducts();
+        }
+        return await this.makeRequest(`/products/search/${encodeURIComponent(query)}`);
+    }
+
+    // Альтернативный поиск через query параметр
+    async getProductsWithSearch(searchQuery = '') {
+        const url = searchQuery ? `/products?search=${encodeURIComponent(searchQuery)}` : '/products';
+        return await this.makeRequest(url);
+    }
+
     // Создать товар (для администраторов)
     async createProduct(productData) {
         return await this.makeRequest('/products', {

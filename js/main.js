@@ -126,10 +126,49 @@ function renderProducts(products) {
         return;
     }
 
-    catalogContainer.innerHTML = products.map(product => `
+    // Добавим отладку для проверки данных
+    console.log('🔍 Данные товаров для слайдера:', products.map(p => ({
+        name: p.name,
+        imageUrl: p.imageUrl,
+        imageUrl2: p.imageUrl2,
+        ImageUrl2: p.ImageUrl2 // Проверим оба варианта
+    })));
+
+    catalogContainer.innerHTML = products.map(product => {
+        // Используем правильное поле для второго изображения
+        const firstImage = product.imageUrl || 'img/placeholder.jpg';
+        const secondImage = product.ImageUrl2 || product.imageUrl2 || firstImage;
+
+        console.log(`🖼️ Товар "${product.name}":`, {
+            firstImage: firstImage,
+            secondImage: secondImage,
+            hasImageUrl2: !!(product.ImageUrl2 || product.imageUrl2)
+        });
+
+        return `
         <div class="catalog__item">
-            <img class="item__image" src="${product.imageUrl || 'img/placeholder.jpg'}" alt="${product.name}"
-                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUQ2Ii8+CjxwYXRoIGQ9Ik04MCA4MEgxMjBWMTIwSDgwVjgwWiIgZmlsbD0iI0U2RDdDMyIvPgo8cGF0aCBkPSJNNjAgNjBIMTQwVjE0MEg2MFY2MFoiIGZpbGw9IiM4QjczNTUiLz4KPC9zdmc+'">
+            <div class="product-slider">
+                <div class="slider-container">
+                    <div class="slide active">
+                        <img class="item__image" src="${firstImage}" alt="${product.name}"
+                             onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUQ2Ii8+CjxwYXRoIGQ9Ik04MCA4MEgxMjBWMTIwSDgwVjgwWiIgZmlsbD0iI0U2RDdDMyIvPgo8cGF0aCBkPSJNNjAgNjBIMTQwVjE0MEg2MFY2MFoiIGZpbGw9IiM4QjczNTUiLz4KPC9zdmc+'">
+                    </div>
+                    <div class="slide">
+                        <img class="item__image" src="${secondImage}" alt="${product.name} - дополнительный вид"
+                             onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUQ2Ii8+CjxwYXRoIGQ9Ik04MCA4MEgxMjBWMTIwSDgwVjgwWiIgZmlsbD0iI0U2RDdDMyIvPgo8cGF0aCBkPSJNNjAgNjBIMTQwVjE0MEg2MFY2MFoiIGZpbGw9IiM4QjczNTUiLz4KPC9zdmc+'">
+                    </div>
+                </div>
+                <button class="slider-arrow slider-arrow-prev" aria-label="Предыдущий слайд">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <button class="slider-arrow slider-arrow-next" aria-label="Следующий слайд">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
             <p class="item__name">${product.name}</p>
             <p class="item__price">${product.price} ₽</p>
             ${product.weight ? `<p class="item__weight">${product.weight}g</p>` : ''}
@@ -142,9 +181,43 @@ function renderProducts(products) {
                 </button>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 
-    console.log(`Rendered ${products.length} products`);
+    // Инициализация слайдеров после рендеринга
+    setTimeout(() => {
+        if (window.initializeAllProductSliders) {
+            window.initializeAllProductSliders();
+        }
+    }, 100);
+    
+    console.log(`Rendered ${products.length} products with sliders`);
+}
+
+// Функция инициализации слайдеров
+function initializeProductSliders() {
+    const sliders = document.querySelectorAll('.product-slider');
+    
+    sliders.forEach(slider => {
+        new Swiper(slider, {
+            direction: 'horizontal',
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            effect: 'slide',
+            speed: 500,
+            slidesPerView: 1,
+            spaceBetween: 0,
+        });
+    });
+    
+    console.log(`Initialized ${sliders.length} product sliders`);
 }
 
 function showProductsError(message) {

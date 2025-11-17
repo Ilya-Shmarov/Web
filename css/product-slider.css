@@ -1,0 +1,302 @@
+/* product-slider.css */
+/* Стили для красивого слайдера товаров */
+
+.product-slider {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.product-slider:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.slide.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.slide.active img {
+    transform: scale(1.05);
+}
+
+/* Стильные минималистичные стрелки */
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1.5px solid #E6D7C3;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: #5C4033;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 10;
+    box-shadow: 0 2px 12px rgba(92, 64, 51, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+.slider-arrow:hover {
+    background: #5C4033;
+    border-color: #5C4033;
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 16px rgba(92, 64, 51, 0.25);
+    opacity: 1 !important;
+}
+
+.slider-arrow:active {
+    transform: translateY(-50%) scale(1.05);
+}
+
+.product-slider:hover .slider-arrow {
+    opacity: 0.8;
+}
+
+.slider-arrow-prev {
+    left: 8px;
+}
+
+.slider-arrow-next {
+    right: 8px;
+}
+
+/* Иконки стрелок через SVG */
+.slider-arrow svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.slider-arrow:hover svg {
+    stroke: white;
+}
+
+/* Анимация появления стрелок */
+@keyframes slideInArrow {
+    from {
+        opacity: 0;
+        transform: translateY(-50%) scale(0.8);
+    }
+    to {
+        opacity: 0.8;
+        transform: translateY(-50%) scale(1);
+    }
+}
+
+.product-slider:hover .slider-arrow-prev {
+    animation: slideInArrow 0.3s ease-out 0.1s both;
+}
+
+.product-slider:hover .slider-arrow-next {
+    animation: slideInArrow 0.3s ease-out 0.2s both;
+}
+
+/* Стильные индикаторы */
+.slider-indicators {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    z-index: 10;
+    padding: 6px;
+}
+
+.slider-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.slider-indicator:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: scale(1.2);
+}
+
+.slider-indicator.active {
+    background: white;
+    transform: scale(1.3);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Эффект наложения на изображение */
+.slide::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        transparent 60%,
+        rgba(0, 0, 0, 0.1) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    border-radius: 12px;
+}
+
+.slide.active::after {
+    opacity: 1;
+}
+
+/* Анимация перехода между слайдами */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.slide.active {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Загрузочное состояние */
+.product-slider.loading {
+    background: linear-gradient(90deg, #f5f5f5 25%, #eeeeee 50%, #f5f5f5 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .product-slider {
+        height: 140px;
+    }
+    
+    .slider-arrow {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+        opacity: 0.7;
+    }
+    
+    .slider-arrow svg {
+        width: 14px;
+        height: 14px;
+    }
+    
+    .slider-arrow-prev {
+        left: 6px;
+    }
+    
+    .slider-arrow-next {
+        right: 6px;
+    }
+    
+    .slider-indicators {
+        bottom: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-slider {
+        height: 120px;
+    }
+    
+    .slider-arrow {
+        width: 26px;
+        height: 26px;
+    }
+    
+    .slider-arrow svg {
+        width: 12px;
+        height: 12px;
+    }
+}
+
+/* Доступность */
+.slider-arrow:focus {
+    outline: 2px solid #5C4033;
+    outline-offset: 2px;
+    opacity: 1 !important;
+}
+
+.slider-indicator:focus {
+    outline: 1px solid white;
+    outline-offset: 1px;
+}
+
+/* Плавные переходы */
+@media (prefers-reduced-motion: no-preference) {
+    .slide {
+        transition: all 0.6s ease;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .slide {
+        transition: opacity 0.3s ease;
+    }
+    
+    .slider-arrow {
+        transition: opacity 0.2s ease;
+    }
+}
